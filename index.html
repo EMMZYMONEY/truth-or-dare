@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Truth or Dare - Adult Game</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="background-overlay"></div>
+
+  <header>
+    <h1>🔥 Truth or Dare</h1>
+    <p>Let the naughtiness begin!</p>
+  </header>
+
+  <main>
+    <!-- Wheel Section -->
+    <div class="wheel-container">
+    <div class="wheel-pointer"></div>
+    <canvas id="wheel" width="300" height="300"></canvas>
+      <button id="spin-btn">Spin</button>
+    </section>
+
+    <!-- Question Display Panel -->
+    <section id="question-panel">
+      <h2 id="player-name-display"></h2>
+      <div class="choice-buttons">
+        <button id="truthBtn">Truth</button>
+        <button id="dareBtn">Dare</button>
+      </div>
+      <div id="question-display"></div>
+    </section>
+
+    <!-- Add Player Section -->
+    <section id="add-player">
+      <h3>Add Players</h3>
+      <input type="text" id="player-name" placeholder="Enter name" />
+      <input type="file" id="player-avatar" accept="image/*" />
+      <button id="add-player-btn">Add Player</button>
+      <ul id="playerList"></ul>
+    </section>
+  </main>
+
+  <script src="questions.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

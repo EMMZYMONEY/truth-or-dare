@@ -1,0 +1,252 @@
+/* Reset and global styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to bottom right, #1f0028, #42003f);
+  color: #fff;
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+  padding: 1rem;
+}
+
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://images.unsplash.com/photo-1588776814546-418ed0521f12?auto=format&fit=crop&w=800&q=80');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.08;
+  z-index: -1;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+header h1 {
+  font-size: 2rem;
+  color: #ff69b4;
+  text-shadow: 0 0 10px #ff69b4;
+}
+
+header p {
+  font-size: 1rem;
+  color: #fff;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+#wheel-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* Remove old pointer styling */
+/* #wheel-section::after {
+  content: "";
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 25px solid #ff69b4;
+  z-index: 10;
+} */
+
+/* Wheel wrapper for pointer positioning */
+.wheel-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: auto;
+}
+
+/* Canvas (wheel) styling */
+canvas#wheel {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 50%;
+  background: #111;
+  border: 5px solid #ff1493;
+  box-shadow: 0 0 25px rgba(255, 105, 180, 0.5);
+  transition: transform 2.8s cubic-bezier(0.25, 1.3, 0.35, 1);
+  display: block;
+  margin: 20px auto;
+}
+
+/* Stylish pointer (spinning separator) */
+.wheel-pointer {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 25px solid #ff69b4; /* hot pink */
+  transform: translateX(-50%);
+  z-index: 10;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+  animation: pointerPulse 2s infinite ease-in-out;
+}
+
+/* Optional animation for the pointer */
+@keyframes pointerPulse {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.1);
+  }
+}
+
+/* Spin button */
+#spin-btn {
+  background: linear-gradient(45deg, #ff1493, #ff69b4);
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(255, 20, 147, 0.3);
+  display: block;
+  margin: 20px auto 0 auto;
+  margin-top: 10px;
+  transition: background 0.3s ease;
+}
+
+#spin-btn:hover {
+  background: linear-gradient(45deg, #ff69b4, #ff1493);
+}
+
+button {
+  background: #ff1493;
+  color: #fff;
+  border: none;
+  padding: 1rem 1.5rem;
+  margin-top: 1rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 10px #ff1493;
+  transition: transform 0.2s;
+}
+
+button:hover {
+  transform: scale(1.05);
+  background: #ff3385;
+}
+
+/* Player name bolded */
+#player-name-display {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #ffd700;
+  text-shadow: 0 0 10px #ffd700;
+}
+
+/* Question panel */
+#question-panel {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #ff69b4;
+  box-shadow: 0 0 10px #ff69b4;
+}
+
+#question-display {
+  font-size: 1.1rem;
+  margin-top: 1rem;
+  line-height: 1.5;
+  color: #fff;
+}
+
+/* Truth/Dare buttons */
+.choice-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.choice-buttons button {
+  flex: 1;
+  max-width: 120px;
+  background: #ff69b4;
+  box-shadow: 0 0 8px #ff69b4;
+}
+
+/* Add player section */
+#add-player {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #444;
+  text-align: center;
+}
+
+#add-player input[type="text"],
+#add-player input[type="file"] {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 0.5rem;
+  border: none;
+  border-radius: 10px;
+  background: #222;
+  color: #fff;
+}
+
+#add-player button {
+  width: 100%;
+  margin-top: 0.5rem;
+  background: #c71585;
+  box-shadow: 0 0 10px #c71585;
+}
+
+#playerList {
+  margin-top: 1rem;
+  list-style: none;
+  padding: 0;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+#playerList li {
+  padding: 0.3rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes glow {
+  0%, 100% { text-shadow: 0 0 10px #ff69b4, 0 0 20px #ff1493; }
+  50% { text-shadow: 0 0 20px #ff69b4, 0 0 30px #ff1493; }
+}
+
+#player-name-display.glow {
+  animation: glow 1.5s infinite;
+  font-weight: 900;
+}
