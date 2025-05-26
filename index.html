@@ -11,30 +11,36 @@
 <body>
   <div class="background-overlay"></div>
 
+  <div id="mode-select-modal" class="modal">
+    <div class="modal-content">
+      <h2>Choose Game Mode</h2>
+      <button onclick="startGame('offline')">Offline</button>
+      <button onclick="startGame('online')">Online</button>
+    </div>
+  </div>
+
   <header>
     <h1>🔥 Truth or Dare</h1>
     <p>Let the naughtiness begin!</p>
   </header>
 
+
   <main>
-    <!-- Wheel Section -->
     <div class="wheel-container">
-    <div class="wheel-pointer"></div>
-    <canvas id="wheel" width="300" height="300"></canvas>
+      <div class="wheel-pointer"></div>
+      <canvas id="wheel" width="300" height="300"></canvas>
       <button id="spin-btn">Spin</button>
-    </section>
+    </div>
 
-    <!-- Question Display Panel -->
-    <section id="question-panel">
-      <h2 id="player-name-display"></h2>
-      <div class="choice-buttons">
-        <button id="truthBtn">Truth</button>
-        <button id="dareBtn">Dare</button>
-      </div>
-      <div id="question-display"></div>
-    </section>
+<section id="question-panel">
+  <h2 id="player-name-display"></h2>
+  <div class="choice-buttons">
+    <button id="truthBtn" onclick="showQuestion('truth')">Truth</button>
+    <button id="dareBtn" onclick="showQuestion('dare')">Dare</button>
+  </div>
+  <div id="question-display"></div>
+</section>
 
-    <!-- Add Player Section -->
     <section id="add-player">
       <h3>Add Players</h3>
       <input type="text" id="player-name" placeholder="Enter name" />
@@ -42,9 +48,48 @@
       <button id="add-player-btn">Add Player</button>
       <ul id="playerList"></ul>
     </section>
+<section id="video-call" style="display: none; text-align: center;">
+  <h3>🎥 Live Video Call</h3>
+  <iframe
+    id="jitsi-frame"
+    src="https://meet.jit.si/EmmzyTruthOrDare"
+    allow="camera; microphone; fullscreen; display-capture"
+    width="100%"
+    height="500"
+    style="border: 0; border-radius: 10px;"
+  ></iframe>
+</section>
+
   </main>
 
-  <script src="questions.js"></script>
-  <script src="script.js"></script>
+<script>
+  let questionArrayType = 'offline';
+
+  function startGame(mode) {
+    questionArrayType = mode;
+    document.getElementById('mode-select-modal').style.display = 'none';
+if (mode === 'online') {
+  document.getElementById('video-call').style.display = 'block';
+}
+
+    const script = document.createElement('script');
+    script.src = mode === 'online' ? 'online-questions.js' : 'questions.js';
+    script.onload = () => {
+      const mainScript = document.createElement('script');
+      mainScript.src = 'script.js';
+      document.body.appendChild(mainScript);
+    };
+    document.body.appendChild(script);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const videoBtn = document.getElementById('launch-video-btn');
+    if (videoBtn) {
+      videoBtn.addEventListener('click', () => {
+        window.open('https://meet.jit.si/EmmzyTruthOrDare', '_blank');
+      });
+    }
+  });
+</script>
 </body>
 </html>

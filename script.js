@@ -1,10 +1,7 @@
 const players = [];
 let currentPlayerIndex = 0;
 let spinning = false;
-let currentRotation = 0; // Added for consistent spin logic
-
-// const truthQuestions = [/* 1000+ truths */];
-// const dareQuestions = [/* 1000+ dares */];
+let currentRotation = 0;
 
 const wheel = document.getElementById('wheel');
 const spinBtn = document.getElementById('spin-btn');
@@ -14,17 +11,28 @@ const questionDisplay = document.getElementById('question-display');
 const playerList = document.getElementById('playerList');
 const addPlayerBtn = document.getElementById('add-player-btn');
 
+function setChoiceButtonsState(enabled) {
+  const truthBtn = document.getElementById("truthBtn");
+  const dareBtn = document.getElementById("dareBtn");
+
+  if (truthBtn && dareBtn) {
+    truthBtn.disabled = !enabled;
+    dareBtn.disabled = !enabled;
+    truthBtn.classList.toggle('disabled', !enabled);
+    dareBtn.classList.toggle('disabled', !enabled);
+  }
+}
+
 function drawWheel() {
   const ctx = wheel.getContext('2d');
   const segments = players.length;
   const angle = (2 * Math.PI) / segments;
 
-  ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform before drawing
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, wheel.width, wheel.height);
-  ctx.translate(150, 150); // Center the canvas
+  ctx.translate(150, 150);
 
   for (let i = 0; i < segments; i++) {
-    // Segment fill
     ctx.beginPath();
     ctx.fillStyle = i % 2 === 0 ? '#1a1a1a' : '#2c2c2c';
     ctx.moveTo(0, 0);
@@ -32,7 +40,6 @@ function drawWheel() {
     ctx.lineTo(0, 0);
     ctx.fill();
 
-    // Player name
     ctx.save();
     ctx.rotate(angle * i + angle / 2);
     ctx.textAlign = "right";
@@ -42,10 +49,8 @@ function drawWheel() {
     ctx.restore();
   }
 
-  // Draw radial divider lines between slices
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";  // subtle white lines
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
   ctx.lineWidth = 2;
-
   for (let i = 0; i < segments; i++) {
     const lineAngle = angle * i;
     ctx.beginPath();
@@ -54,14 +59,13 @@ function drawWheel() {
     ctx.stroke();
   }
 
-  ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform after drawing
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
-
 
 function spinWheel() {
   if (spinning || players.length < 2) return;
-  spinning = true;
 
+  spinning = true;
   const spinSound = new Audio('spin.mp3');
   spinSound.play();
 
@@ -77,26 +81,28 @@ function spinWheel() {
     const anglePerSegment = 360 / players.length;
     const index = Math.floor((360 - normalizedRotation + anglePerSegment / 2) % 360 / anglePerSegment);
     currentPlayerIndex = index;
-    showChoice();
+    showChoice(); // Enable buttons in showChoice
     spinning = false;
-  }, 5000); // Must match CSS transition duration
+
+  }, 5000);
 }
 
 function showChoice() {
   const player = players[currentPlayerIndex];
   playerNameDisplay.textContent = player.name;
-  questionDisplay.innerHTML = `
-    <div class="choice-buttons">
-      <button onclick="showQuestion('truth')">Truth</button>
-      <button onclick="showQuestion('dare')">Dare</button>
-    </div>
-  `;
+  questionDisplay.textContent = '';
+  setChoiceButtonsState(true); // ✅ Enable buttons AFTER spin
   questionPanel.scrollIntoView({ behavior: "smooth" });
 }
-
 function showQuestion(type) {
-  const questionArray = type === 'truth' ? truthQuestions : dareQuestions;
-  const question = questionArray[Math.floor(Math.random() * questionArray.length)];
+  let questions;
+  if (typeof questionArrayType !== 'undefined' && questionArrayType === 'online') {
+    questions = type === 'truth' ? onlineTruthQuestions : onlineDareQuestions;
+  } else {
+    questions = type === 'truth' ? truthQuestions : dareQuestions;
+  }
+
+  const question = questions[Math.floor(Math.random() * questions.length)];
   questionDisplay.textContent = question;
 }
 
@@ -107,7 +113,6 @@ function addPlayer() {
   const file = fileInput.files[0];
 
   if (!name) return alert('Enter a name!');
-
   const newPlayer = { name };
 
   if (file) {
@@ -135,11 +140,34 @@ function updatePlayerList() {
   playerList.innerHTML = '';
   players.forEach((p, i) => {
     const li = document.createElement('li');
-    li.textContent = `${i + 1}. ${p.name}`;
+    li.innerHTML = `
+      <div class="player-info">
+        ${p.avatar ? `<img src="${p.avatar}" class="avatar" />` : ''}
+        <span class="player-name">${p.name}</span>
+      </div>
+      <div class="player-actions">
+        <button class="icon-btn" onclick="editPlayer(${i})" title="Edit">✏️</button>
+        <button class="icon-btn" onclick="removePlayer(${i})" title="Remove">❌</button>
+      </div>
+    `;
     playerList.appendChild(li);
   });
 }
 
-// Events
+function removePlayer(index) {
+  players.splice(index, 1);
+  drawWheel();
+  updatePlayerList();
+}
+
+function editPlayer(index) {
+  const newName = prompt("Edit player name:", players[index].name);
+  if (newName && newName.trim()) {
+    players[index].name = newName.trim();
+    drawWheel();
+    updatePlayerList();
+  }
+}
+
 spinBtn.addEventListener('click', spinWheel);
 addPlayerBtn.addEventListener('click', addPlayer);
